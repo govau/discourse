@@ -1,26 +1,14 @@
-import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import computed from 'ember-addons/ember-computed-decorators';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
+import PenaltyController from 'admin/mixins/penalty-controller';
 
-export default Ember.Controller.extend(ModalFunctionality, {
+export default Ember.Controller.extend(PenaltyController, {
   suspendUntil: null,
-  reason: null,
-  message: null,
   suspending: false,
-  user: null,
-  post: null,
-  successCallback: null,
 
   onShow() {
-    this.setProperties({
-      suspendUntil: null,
-      reason: null,
-      message: null,
-      suspending: false,
-      loadingUser: true,
-      post: null,
-      successCallback: null,
-    });
+    this.resetModal();
+    this.setProperties({ suspendUntil: null, suspending: false });
   },
 
   @computed('suspendUntil', 'reason', 'suspending')
@@ -37,15 +25,11 @@ export default Ember.Controller.extend(ModalFunctionality, {
         suspend_until: this.get('suspendUntil'),
         reason: this.get('reason'),
         message: this.get('message'),
-        post_id: this.get('post.id')
-      }).then(result => {
-        this.send('closeModal');
-        let callback = this.get('successCallback');
-        if (callback) {
-          callback(result);
-        }
-      }).catch(popupAjaxError).finally(() => this.set('suspending', false));
+        post_id: this.get('post.id'),
+        post_action: this.get('postAction'),
+        post_edit: this.get('postEdit')
+      }).then(result => this.finishedSubmission(result))
+        .catch(popupAjaxError).finally(() => this.set('suspending', false));
     }
   }
-
 });

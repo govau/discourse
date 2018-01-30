@@ -4,8 +4,6 @@ import computed from 'ember-addons/ember-computed-decorators';
 export default Ember.Component.extend({
   adminTools: Ember.inject.service(),
   expanded: false,
-  suspended: false,
-
   tagName: 'div',
   classNameBindings: [
     ':flagged-post',
@@ -58,18 +56,6 @@ export default Ember.Component.extend({
         filter: 'post',
         post_id: this.get('flaggedPost.id')
       });
-    },
-
-    showSuspendModal() {
-      let post = this.get('flaggedPost');
-      let user = post.get('user');
-      this.get('adminTools').showSuspendModal(
-        user,
-        {
-          post,
-          successCallback: result => this.set('suspended', result.suspended)
-        }
-      );
     }
   }
 });

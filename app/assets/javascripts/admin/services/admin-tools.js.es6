@@ -52,7 +52,10 @@ export default Ember.Service.extend({
       modalClass: `${type}-user-modal`
     });
     if (opts.post) {
-      controller.set('post', opts.post);
+      controller.setProperties({
+        post: opts.post,
+        postEdit: opts.post.get('raw')
+      });
     }
 
     return (user.adminUserView ?
