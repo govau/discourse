@@ -9,8 +9,8 @@ Discourse::Application.configure do
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
 
-  # Disable Rails's static asset server (Apache or nginx will already do this)
-  config.public_file_server.enabled = GlobalSetting.serve_static_assets || false
+  # For cloud foundry we usually serve static assets
+  config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
 
   config.assets.js_compressor = :uglifier
 
@@ -60,5 +60,12 @@ Discourse::Application.configure do
   if emails = GlobalSetting.developer_emails
     config.developer_emails = emails.split(",").map(&:downcase).map(&:strip)
   end
+
+  if ENV["RAILS_LOG_TO_STDOUT"].present?
+    logger           = ActiveSupport::Logger.new(STDOUT)
+    logger.formatter = config.log_formatter
+    config.logger = ActiveSupport::TaggedLogging.new(logger)
+  end
+
 
 end
