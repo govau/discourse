@@ -24,8 +24,12 @@ Discourse::Application.routes.draw do
     mount Sidekiq::Web => "/sidekiq"
     mount Logster::Web => "/logs"
   else
-    # only allow sidekiq in master site
-    mount Sidekiq::Web => "/sidekiq", constraints: AdminConstraint.new(require_master: true)
+    if ENV["SIDEKIQ_NOAUTH"].present?
+      mount Sidekiq::Web => "/sidekiq"
+    else
+      # only allow sidekiq in master site
+      mount Sidekiq::Web => "/sidekiq", constraints: AdminConstraint.new(require_master: true)
+    end
     mount Logster::Web => "/logs", constraints: AdminConstraint.new
   end
 
