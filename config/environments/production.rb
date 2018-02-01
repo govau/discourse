@@ -12,6 +12,8 @@ Discourse::Application.configure do
   # For cloud foundry we usually serve static assets
   config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
 
+  config.force_ssl = ENV['FORCE_HTTPS'].present? || false
+
   config.assets.js_compressor = :uglifier
 
   # stuff should be pre-compiled
