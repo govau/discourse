@@ -84,15 +84,18 @@ class FileHelper
       timeout: 15,
       skip_missing_workers: true,
       # PNG
-      optipng: { level: 2, strip: SiteSetting.strip_image_metadata },
+      optipng: false,
       advpng: false,
       pngcrush: false,
       pngout: false,
       pngquant: false,
       # JPG
-      jpegoptim: { strip: SiteSetting.strip_image_metadata ? "all" : "none" },
+      jpegoptim: false,
       jpegtran: false,
       jpegrecompress: false,
+      #cga
+      gifsicle: false,
+      svgo: false,
     ).optimize_image!(filename)
   end
 
