@@ -1,0 +1,36 @@
+---
+applications:
+- name: discourse
+  path: .
+  buildpack: ruby_buildpack_no_assets_precompile
+  memory: 1.5G
+  instances: 1
+  command: ./cf_run_app_discourse.sh
+  timeout: 120
+  routes:
+  - route: discourse.cloud.gov.au
+  env:
+    RAILS_ENV: production
+    RAILS_LOG_TO_STDOUT: true
+    RAILS_SERVE_STATIC_FILES: true
+    FORCE_HTTPS: true
+  services:
+   - discourse-postgres
+   - discourse-redis
+   - discourse-ups
+
+- name: discourse-sidekiq
+  path: .
+  buildpack: ruby_buildpack_no_assets_precompile
+  memory: 512M
+  instances: 1
+  command: ./cf_run_app_sidekiq.sh
+  no-route: true
+  health-check-type: process
+  timeout: 120
+  env: {}
+
+  services:
+   - discourse-postgres
+   - discourse-redis
+   - discourse-ups
