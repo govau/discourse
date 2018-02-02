@@ -123,3 +123,5 @@ vendor/bundle/*
 # ignore nodejs files
 /node_modules
 /package-lock.json
+
+secrets.json
