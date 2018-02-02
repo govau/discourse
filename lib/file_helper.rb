@@ -96,6 +96,7 @@ class FileHelper
       #cga
       gifsicle: false,
       svgo: false,
+      jhead: false,
     ).optimize_image!(filename)
   end
 
